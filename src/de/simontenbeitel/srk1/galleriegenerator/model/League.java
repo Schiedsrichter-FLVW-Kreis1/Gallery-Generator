@@ -1,4 +1,4 @@
-package de.simontenbeitel.srk1.galleriegenerator;
+package de.simontenbeitel.srk1.galleriegenerator.model;
 
 public enum League {
 

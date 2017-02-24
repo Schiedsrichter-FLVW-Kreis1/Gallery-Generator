@@ -1,14 +1,14 @@
-package de.simontenbeitel.srk1.galleriegenerator;
+package de.simontenbeitel.srk1.galleriegenerator.model;
 
 public class Referee {
 
-    long idNumber;
-    String firstname;
-    String lastname;
-    String birthday;
-    String club;
-    League qmax;
-    String refereeSince;
+    private long idNumber;
+    private String firstname;
+    private String lastname;
+    private String birthday;
+    private String club;
+    private League qmax;
+    private String refereeSince;
 
     public long getIdNumber() {
         return idNumber;

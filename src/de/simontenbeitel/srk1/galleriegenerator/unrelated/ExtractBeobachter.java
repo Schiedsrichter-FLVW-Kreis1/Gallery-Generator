@@ -1,7 +1,7 @@
 package de.simontenbeitel.srk1.galleriegenerator.unrelated;
 
 import de.simontenbeitel.srk1.galleriegenerator.Generator;
-import de.simontenbeitel.srk1.galleriegenerator.Referee;
+import de.simontenbeitel.srk1.galleriegenerator.model.Referee;
 
 import java.io.*;
 import java.util.List;

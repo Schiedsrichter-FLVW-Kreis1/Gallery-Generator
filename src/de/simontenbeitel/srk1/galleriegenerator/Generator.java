@@ -4,6 +4,7 @@ import de.simontenbeitel.srk1.galleriegenerator.comparator.AssociationComparator
 import de.simontenbeitel.srk1.galleriegenerator.comparator.NameComparator;
 import de.simontenbeitel.srk1.galleriegenerator.mapper.MasterDataToRefereeMapper;
 import de.simontenbeitel.srk1.galleriegenerator.model.ImageWithThumbnail;
+import de.simontenbeitel.srk1.galleriegenerator.model.Referee;
 
 import java.io.*;
 import java.util.HashMap;
@@ -123,7 +124,7 @@ public class Generator {
 
     public String getGalleryHtml() {
         final List<Referee> associationReferees = referees.stream()
-                .filter(referee -> referee.qmax != null && referee.qmax.isAssociation)
+                .filter(referee -> referee.getQmax() != null && referee.getQmax().isAssociation)
                 .sorted(new AssociationComparator())
                 .collect(Collectors.toList());
         final StringBuilder sb = new StringBuilder();
@@ -229,19 +230,19 @@ public class Generator {
         sb.append("<div class=\"ksa_member_image\" style=\"float: left; border: 1px solid black; width: 150px; height: 150px;\">");
         if (null == imageWithThumbnail) {
             sb.append("<img src=\"http://dummyimage.com/150/ffffff/000000.gif&amp;text=Bild+folgt\" alt=\"");
-            sb.append(referee.firstname).append(" ").append(referee.lastname);
+            sb.append(referee.getFirstname()).append(" ").append(referee.getLastname());
             sb.append("\" /></div>");
         } else {
             sb.append("<a href=\"").append(imageWithThumbnail.getImageUrl()).append("\">");
             sb.append("<img class=\"wp-image-186\" src=\"").append(imageWithThumbnail.getThumbnailUrl()).append("\" ");
-            sb.append("alt=\"").append(referee.firstname).append(" ").append(referee.lastname).append("\" />");
+            sb.append("alt=\"").append(referee.getFirstname()).append(" ").append(referee.getLastname()).append("\" />");
             sb.append("</a></div>");
         }
         return sb.toString();
     }
 
     private String getNameHtml(Referee referee) {
-        return "<h3 style=\"margin-top: 0;\">" + referee.firstname + " " + referee.lastname + "</h3>";
+        return "<h3 style=\"margin-top: 0;\">" + referee.getFirstname() + " " + referee.getLastname() + "</h3>";
     }
 
     private String getLeagueHtml(Referee referee) {

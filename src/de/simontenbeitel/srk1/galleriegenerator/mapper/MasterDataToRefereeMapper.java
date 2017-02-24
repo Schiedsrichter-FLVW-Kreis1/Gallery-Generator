@@ -1,7 +1,7 @@
 package de.simontenbeitel.srk1.galleriegenerator.mapper;
 
-import de.simontenbeitel.srk1.galleriegenerator.League;
-import de.simontenbeitel.srk1.galleriegenerator.Referee;
+import de.simontenbeitel.srk1.galleriegenerator.model.League;
+import de.simontenbeitel.srk1.galleriegenerator.model.Referee;
 
 import java.util.function.Function;
 
