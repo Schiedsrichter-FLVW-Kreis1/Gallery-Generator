@@ -16,11 +16,11 @@ public class MasterDataToRefereeMapper implements Function<String, Referee> {
         referee.setLastname(parts[0]);
         referee.setFirstname(parts[1]);
         referee.setBirthday(parts[9]);
-        referee.setClub(parts[11]);
-        referee.setIdNumber(Long.parseLong(parts[12]));
-        referee.setRefereeSince(parts[13]);
+        referee.setClub(parts[15]);
+        referee.setIdNumber(Long.parseLong(parts[16]));
+        referee.setRefereeSince(parts[17]);
         try {
-            referee.setQmax(League.valueOf(parts[16]));
+            referee.setQmax(League.valueOf(parts[20]));
         } catch (RuntimeException ignored) {
         }
         return referee;
