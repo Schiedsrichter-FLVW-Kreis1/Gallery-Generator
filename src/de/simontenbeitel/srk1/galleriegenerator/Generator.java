@@ -16,9 +16,9 @@ import java.util.stream.Collectors;
 public class Generator {
 
     private static final String DELIMINATOR = ";";
-    private static final String INTRODUCTION = "Hier stellen wir unsere <a href=\"#Beobachter\">Beobachter</a>, <a href=\"#Foerderkader\">Nachwuchshoffnungen</a> und <a href=\"#Verbandsschiedsrichter\">Spitzenschiedsrichter</a> vor.";
+    private static final String INTRODUCTION = "Hier stellen wir unsere <a href=\"#Beobachter\">Beobachter</a>, <a href=\"#WeitereLeistungskader\">Nachwuchshoffnungen</a> und <a href=\"#Verbandsschiedsrichter\">Spitzenschiedsrichter</a> vor.";
     private static final String HEADING_ASSOCIATION = "<h2 id=\"Verbandsschiedsrichter\">Unsere Verbandsschiedsrichter</h2>";
-    private static final String HEADING_FK = "<h2 id=\"Foerderkader\">Förderkader</h2>";
+    private static final String HEADING_FK = "<h2 id=\"WeitereLeistungskader\">Weitere Schiedsrichter Leistungskader</h2>";
     private static final String HEADING_BEO = "<h2 id=\"Beobachter\">Beobachter</h2>";
     private static final String INTRO_GROUP = "<div class=\"ksa-group\">\n" +
             "<ul style=\"list-style: none;\">";
@@ -115,6 +115,7 @@ public class Generator {
                 .skip(1)
                 .forEach(s -> {
                     String[] parts = s.split(DELIMINATOR);
+                    if (parts[0].isEmpty()) return;
                     try {
                         beo.put(Long.valueOf(parts[0]), parts.length == 4 ? parts[3] : "");
                     } catch (NumberFormatException ignored) {
@@ -158,6 +159,7 @@ public class Generator {
         sb.append(HEADING_FK).append("\n");
         final List<Referee> fkReferees = referees.stream()
                 .filter(referee -> fkMemberIdNumbers.contains(referee.getIdNumber()))
+                .filter(referee -> referee.getQmax() != null && !referee.getQmax().isAssociation)
                 .sorted(new NameComparator())
                 .collect(Collectors.toList());
         sb.append(INTRO_GROUP).append("\n");
@@ -194,6 +196,7 @@ public class Generator {
                 .filter(referee -> beo.containsKey(referee.getIdNumber()))
                 .sorted(new NameComparator())
                 .collect(Collectors.toList());
+        sb.append(INTRO_GROUP).append("\n");
         sb.append("<li style=\"padding: 5px 0 10px 0;\">").append("\n");
         sb.append("<div class=\"ksa_member\">").append("\n");
         firstReferee = beoReferees.get(0);
