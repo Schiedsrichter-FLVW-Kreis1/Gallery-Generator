@@ -16,7 +16,9 @@ import java.util.stream.Collectors;
 public class Generator {
 
     private static final String DELIMINATOR = ";";
-    private static final String INTRODUCTION = "Hier stellen wir unsere <a href=\"#Beobachter\">Beobachter</a>, <a href=\"#WeitereLeistungskader\">Nachwuchshoffnungen</a> und <a href=\"#Verbandsschiedsrichter\">Spitzenschiedsrichter</a> vor.";
+    private static final String INTRODUCTION_BEO = "Hier stellen wir unsere <a href=\"#Beobachter\">Beobachter</a>";
+    private static final String INTRODUCTION_LK = ", <a href=\"#WeitereLeistungskader\">Nachwuchshoffnungen</a>";
+    private static final String INTRODUCTION_VS = " und <a href=\"#Verbandsschiedsrichter\">Spitzenschiedsrichter</a> vor.";
     private static final String HEADING_ASSOCIATION = "<h2 id=\"Verbandsschiedsrichter\">Unsere Verbandsschiedsrichter</h2>";
     private static final String HEADING_FK = "<h2 id=\"WeitereLeistungskader\">Weitere Schiedsrichter Leistungskader</h2>";
     private static final String HEADING_BEO = "<h2 id=\"Beobachter\">Beobachter</h2>";
@@ -128,8 +130,15 @@ public class Generator {
                 .filter(referee -> referee.getQmax() != null && referee.getQmax().isAssociation)
                 .sorted(new AssociationComparator())
                 .collect(Collectors.toList());
+        final List<Referee> fkReferees = referees.stream()
+                .filter(referee -> fkMemberIdNumbers.contains(referee.getIdNumber()))
+                .filter(referee -> referee.getQmax() != null && !referee.getQmax().isAssociation)
+                .sorted(new NameComparator())
+                .collect(Collectors.toList());
         final StringBuilder sb = new StringBuilder();
-        sb.append(INTRODUCTION).append("\n");
+        sb.append(INTRODUCTION_BEO);
+        if (!fkReferees.isEmpty()) sb.append(INTRODUCTION_LK);
+        sb.append(INTRODUCTION_VS).append("\n");
         sb.append(HEADING_ASSOCIATION).append("\n");
         sb.append(INTRO_GROUP).append("\n");
         sb.append("<li style=\"padding: 5px 0 10px 0;\">").append("\n");
@@ -156,40 +165,37 @@ public class Generator {
         sb.append(END_GROUP);
         sb.append("\n\n");
 
-        sb.append(HEADING_FK).append("\n");
-        final List<Referee> fkReferees = referees.stream()
-                .filter(referee -> fkMemberIdNumbers.contains(referee.getIdNumber()))
-                .filter(referee -> referee.getQmax() != null && !referee.getQmax().isAssociation)
-                .sorted(new NameComparator())
-                .collect(Collectors.toList());
-        sb.append(INTRO_GROUP).append("\n");
-        sb.append("<li style=\"padding: 5px 0 10px 0;\">").append("\n");
-        sb.append("<div class=\"ksa_member\">").append("\n");
-        firstReferee = fkReferees.get(0);
-        sb.append(getImageHtml(firstReferee)).append("\n");
-        sb.append("<div class=\"ksa_member_infos\" style=\"float: left; margin-left: 20px;\">").append("\n");
-        sb.append(getNameHtml(firstReferee)).append("\n");
-        sb.append("Geburtstag: ").append(firstReferee.getBirthday()).append("\n");
-        sb.append("Verein: ").append(firstReferee.getClub()).append("\n");
-        sb.append("SR seit: ").append(firstReferee.getRefereeSince()).append("\n");
-        sb.append("Höchste Klasse: ").append(firstReferee.getQmax().description).append("\n\n");
-        sb.append("</div>").append("\n").append("<div class=\"clear\" style=\"clear: both;\"></div>").append("\n").append("</div></li>").append("\n");
-        fkReferees.stream()
-                .skip(1)
-                .forEach(referee -> {
-                    sb.append("<li style=\"padding: 10px 0; border-top: 3px dotted grey;\">").append("\n");
-                    sb.append("<div class=\"ksa_member\">").append("\n");
-                    sb.append(getImageHtml(referee)).append("\n");
-                    sb.append("<div class=\"ksa_member_infos\" style=\"float: left; margin-left: 20px;\">").append("\n");
-                    sb.append(getNameHtml(referee)).append("\n");
-                    sb.append("Geburtstag: ").append(referee.getBirthday()).append("\n");
-                    sb.append("Verein: ").append(referee.getClub()).append("\n");
-                    sb.append("SR seit: ").append(referee.getRefereeSince()).append("\n");
-                    sb.append("Höchste Klasse: ").append(referee.getQmax().description).append("\n\n");
-                    sb.append("</div>").append("\n").append("<div class=\"clear\" style=\"clear: both;\"></div>").append("\n").append("</div></li>").append("\n");
-                });
-        sb.append(END_GROUP);
-        sb.append("\n\n");
+        if (!fkReferees.isEmpty()) {
+            sb.append(HEADING_FK).append("\n");
+            sb.append(INTRO_GROUP).append("\n");
+            sb.append("<li style=\"padding: 5px 0 10px 0;\">").append("\n");
+            sb.append("<div class=\"ksa_member\">").append("\n");
+            firstReferee = fkReferees.get(0);
+            sb.append(getImageHtml(firstReferee)).append("\n");
+            sb.append("<div class=\"ksa_member_infos\" style=\"float: left; margin-left: 20px;\">").append("\n");
+            sb.append(getNameHtml(firstReferee)).append("\n");
+            sb.append("Geburtstag: ").append(firstReferee.getBirthday()).append("\n");
+            sb.append("Verein: ").append(firstReferee.getClub()).append("\n");
+            sb.append("SR seit: ").append(firstReferee.getRefereeSince()).append("\n");
+            sb.append("Höchste Klasse: ").append(firstReferee.getQmax().description).append("\n\n");
+            sb.append("</div>").append("\n").append("<div class=\"clear\" style=\"clear: both;\"></div>").append("\n").append("</div></li>").append("\n");
+            fkReferees.stream()
+                    .skip(1)
+                    .forEach(referee -> {
+                        sb.append("<li style=\"padding: 10px 0; border-top: 3px dotted grey;\">").append("\n");
+                        sb.append("<div class=\"ksa_member\">").append("\n");
+                        sb.append(getImageHtml(referee)).append("\n");
+                        sb.append("<div class=\"ksa_member_infos\" style=\"float: left; margin-left: 20px;\">").append("\n");
+                        sb.append(getNameHtml(referee)).append("\n");
+                        sb.append("Geburtstag: ").append(referee.getBirthday()).append("\n");
+                        sb.append("Verein: ").append(referee.getClub()).append("\n");
+                        sb.append("SR seit: ").append(referee.getRefereeSince()).append("\n");
+                        sb.append("Höchste Klasse: ").append(referee.getQmax().description).append("\n\n");
+                        sb.append("</div>").append("\n").append("<div class=\"clear\" style=\"clear: both;\"></div>").append("\n").append("</div></li>").append("\n");
+                    });
+            sb.append(END_GROUP);
+            sb.append("\n\n");
+        }
 
         sb.append(HEADING_BEO).append("\n");
         final List<Referee> beoReferees = referees.stream()
